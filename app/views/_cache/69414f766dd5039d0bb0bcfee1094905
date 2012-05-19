@@ -1,0 +1,29 @@
+<body>
+<div id="confirm_container">
+    <h3>&#20197;&#19979;&#12398;&#20869;&#23481;&#12391;&#30331;&#37682;&#12375;&#12414;&#12377;&#12290;&#12424;&#12429;&#12375;&#12356;&#12391;&#12377;&#12363;&#65311;</h3>
+    <div id="entry_container">
+        <div class="entry_preview">
+            <div class="entry_header">
+                <p id="title_preview" class="entry_title"><?php echo safetyOut($title); ?></p>
+                <div class="entry_subinfo">
+                    <span class="tag" id="tag_preview"><?php ${self::HELPER_RECEIVER}->showTags($tagNames); ?></span>
+                    <span class="weather">
+                        <img src="<?php echo safetyOut($weather); ?>" alt="&#20170;&#26085;&#12398;&#22825;&#27671;"></span>
+                    <span class="date">
+                        <?php echo safetyOut($date); ?></span>
+                </div>
+            </div>
+            <div id="text_preview"><?php echo $description_html; ?></div>
+        </div>
+    </div>
+    <form action="/diarysys5/register" method="post">
+        <input type="hidden" name="title" value="<?php echo safetyOut($title); ?>"><input type="hidden" name="description" value="<?php echo safetyOut($description); ?>"><input type="hidden" name="date" value="<?php echo safetyOut($date); ?>"><input type="hidden" name="weather" value="<?php ${self::HELPER_RECEIVER}->weather_id($weather); ?>"><?php ${self::HELPER_RECEIVER}->setTags($tags); ?>
+        <input type="submit" value="&#12456;&#12531;&#12488;&#12522;&#20869;&#23481;&#12434;&#20462;&#27491;&#12377;&#12427;" id="remand"><input type="submit" value="&#12456;&#12531;&#12488;&#12522;&#20869;&#23481;&#12434;&#30331;&#37682;&#12377;&#12427;"><input type="hidden" name="__CSRF_TOKEN__" value="<?php echo $__csrf_token__; ?>">
+</form>
+</div>
+<script type="text/javascript">
+    var obj = entryConfirm();
+    obj.subHeader(1);
+    obj.plugin();
+</script>
+</body>

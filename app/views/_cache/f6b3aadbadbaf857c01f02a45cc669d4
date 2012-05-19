@@ -1,0 +1,44 @@
+<h3>ひとりごと</h3>
+<div id="hitorigoto"></div>
+<br/>
+<h3>Archives</h3>
+<div id="calendar_container">
+    <?php echo $calendar; ?>
+</div>
+<div id="paginate_container">
+    <?php echo $paginate; ?>
+</div>
+<div id="feed_container">
+    <a href="/diarysys5/feed">
+        <img src="/diarysys5/img/feed.png" alt="feed" />
+    </a>
+</div>
+<div class="clearfix"></div>
+<div id="entry_container" class="rslt_row autopagerize_page_element">
+    <?php foreach($entries as $entry) : ?>
+    <div class="entry">
+        <div class="entry_header">
+            <p class="entry_title">
+                <a href="/diarysys5/entry/<?php echo safetyOut($entry['ID']); ?>"><?php echo safetyOut($entry["TITLE"]); ?></a>
+            </p>
+            <div class="entry_subinfo">
+                <span class="tag">
+                <?php foreach($entry["TAG"] as $tag) : ?>
+                    <a href="/diarysys5/tag/<?php echo safetyOut($tag); ?>"><?php echo safetyOut($tag); ?></a>
+                <?php endforeach ?>
+                </span>
+                <span class="weather"><img src="<?php echo safetyOut($entry["WEATHER"]); ?>"/></span>
+                <span class="date"><?php echo safetyOut($entry["DATE"]); ?></span>
+            </div>
+        </div>
+        <div class="entry_article">
+            <?php echo $entry["DESCRIPTION"]; ?>
+        </div>
+    </div>
+    <?php endforeach ?>
+</div>
+
+<script type="text/javascript">
+    hitorigoto();
+    entry();
+</script>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8"/>
+        <link type="text/css" rel="stylesheet" href="/diarysys5/css/diarysys.css" />
+        <link type="text/css" rel="stylesheet" href="/diarysys5/css/lib/quicktags_plus.css" />
+        <link type="text/css" rel="stylesheet" href="/diarysys5/css/lib/fancybox.css" />
+        <link type="text/css" rel="stylesheet" href="/diarysys5/css/lib/prettify.css" />
+        <script type="text/javascript" src="/diarysys5/js/lib/mix.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/lib/mix.modules.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/lib/jquery.min.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/lib/jquery.ba-postmessage.min.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/lib/prettify.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/lib/quicktags_plus.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/lib/jquery.fancybox-1.3.4.pack.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/diarysys.modules.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/diarysys.js"></script>
+        <title>%{$title}</title>
+    </head>
+    <body>
+        <div id="main_container">
+            <div id="entry_container">
+                <div class="entry">
+                    <div class="entry_header">
+                        <p id="title_preview" class="entry_title">(タイトルを入力してください)</p>
+                        <div class="entry_subinfo">
+                            <span class="tag" id="tag_preview">(タグ未設定)</span>
+                            <span class="weather">
+                                <img src="%{$weather}" alt="今日の天気" />
+                            </span>
+                            <span class="date">
+                                %{$date}
+                            </span>
+                        </div>
+                    </div>
+                    <div id="text_preview">(本文を入力してください)</div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var obj = entryRegister();
+            obj.displayPreview();
+        </script>
+    </body>
+</html>

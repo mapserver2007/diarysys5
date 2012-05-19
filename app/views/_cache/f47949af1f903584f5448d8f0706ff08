@@ -1,0 +1,4 @@
+<div class="login" style="text-align: center;">
+    <p>ログインが成功しました。</p>
+    <p><a href="/diarysys5">戻る</a></p>
+</div>

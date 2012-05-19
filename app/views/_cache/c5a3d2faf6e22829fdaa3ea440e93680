@@ -1,0 +1,19 @@
+<table id="entry_list" class="tablesorter">
+    <thead>
+        <tr>
+            <th>日付</th>
+            <th>タイトル</th>
+            <th>タグ</th>
+            <th>削除</th>
+            <th>編集</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php ${self::HELPER_RECEIVER}->entry_list($entry); ?>
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(function() {
+        $("#entry_list").tablesorter();
+    });
+</script>

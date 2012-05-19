@@ -1,0 +1,21 @@
+<div class="login">
+    <form method="post" action="/diarysys5/login">
+        <table>
+            <tbody>
+                <tr>
+                    <td>パスワード：</td>
+                    <td>
+                        <input id="password" name="password" type="password" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <input type="submit" value="ログイン" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <input type="hidden" name="user_id" value="%{$user_id}" />
+    </form>
+</div>

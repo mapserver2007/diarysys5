@@ -1,0 +1,44 @@
+<h3>ひとりごと</h3>
+<div id="hitorigoto"></div>
+<br/>
+<h3>Archives</h3>
+<div id="calendar_container">
+    #{$calendar}
+</div>
+<div id="paginate_container">
+    #{$paginate}
+</div>
+<div id="feed_container">
+    <a href="/diarysys5/feed">
+        <img src="/diarysys5/img/feed.png" alt="feed" />
+    </a>
+</div>
+<div class="clearfix"></div>
+<div id="entry_container" class="rslt_row autopagerize_page_element">
+    <% foreach($entries as $entry) : %>
+    <div class="entry">
+        <div class="entry_header">
+            <p class="entry_title">
+                <a href="/diarysys5/entry/%{$entry['ID']}">%{$entry["TITLE"]}</a>
+            </p>
+            <div class="entry_subinfo">
+                <span class="tag">
+                <% foreach($entry["TAG"] as $tag) : %>
+                    <a href="/diarysys5/tag/%{$tag}">%{$tag}</a>
+                <% endforeach %>
+                </span>
+                <span class="weather"><img src="%{$entry["WEATHER"]}"/></span>
+                <span class="date">%{$entry["DATE"]}</span>
+            </div>
+        </div>
+        <div class="entry_article">
+            #{$entry["DESCRIPTION"]}
+        </div>
+    </div>
+    <% endforeach %>
+</div>
+
+<script type="text/javascript">
+    hitorigoto();
+    entry();
+</script>

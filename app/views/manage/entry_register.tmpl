@@ -1,0 +1,29 @@
+<form action="/diarysys5/confirm" method="post">
+<div id="caution">
+    <div id="caution_message"></div>
+    <img src="/diarysys5/img/close.png" alt="close" id="caution_close" />
+</div>
+<div class="clearfix"></div>
+<h3>Title</h3>
+<input type="text" name="title" id="entry_title"/>
+<div id="quicktag">
+    <script type="text/javascript">edToolbar();</script>
+</div>
+<div id="temporary">
+    <input type="button" value="一時保存" id="temporary_save"/>
+    <input type="button" value="一時保存取得" id="temporary_load"/>
+    <div id="temporary_result"></div>
+</div>
+<div class="clearfix"></div>
+<h3>Tag</h3>
+<div id="tag_list">
+    <img src="/diarysys5/img/ajax-loader1.gif" alt="loading" />
+</div>
+<h3>Description</h3>
+<textarea name="description" id="entry_textarea"></textarea>
+<input type="submit" value="日記を登録" id="confirm" />
+<input type="button" value="プレビュー" id="preview"/>
+<label><input type="checkbox" checked="checked" id="realtime"/>リアルタイムプレビュー</label>
+<label><input type="checkbox" checked="checked" id="image_no_preview"/>画像をプレビューしない</label>
+</form>
+!{entry_register($entry)}

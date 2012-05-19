@@ -1,0 +1,10 @@
+<div class="tag_list">
+    <ul>
+    <?php foreach($tags as $tag) : ?>
+        <li id="tag_<?php echo safetyOut($tag["ID"]); ?>">
+            <span><?php echo safetyOut($tag["NAME"]); ?></span>
+            <sup><?php echo safetyOut($tag["COUNT"]); ?></sup>
+        </li>
+    <?php endforeach ?>
+    </ul>
+</div>

@@ -1,0 +1,10 @@
+<h3>アップロード済み画像一覧</h3>
+<div id="paginate_container">
+    #{$paginate}
+</div>
+<div id="img_container"></div>
+<script type="text/javascript">
+    var obj = imageList(%{$page});
+    obj.fancybox();
+    obj.subHeader(3);
+</script>

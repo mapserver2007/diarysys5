@@ -1,0 +1,25 @@
+<body>
+<form action="/diarysys5/confirm" method="post">
+<div id="caution">
+    <div id="caution_message"></div>
+    <img src="/diarysys5/img/close.png" alt="close" id="caution_close">
+</div>
+<div class="clearfix"></div>
+<h3>Title</h3>
+<input type="text" name="title" id="entry_title"><div id="quicktag">
+    <script type="text/javascript">edToolbar();</script>
+</div>
+<div id="temporary">
+    <input type="button" value="&#19968;&#26178;&#20445;&#23384;" id="temporary_save"><input type="button" value="&#19968;&#26178;&#20445;&#23384;&#21462;&#24471;" id="temporary_load"><div id="temporary_result"></div>
+</div>
+<div class="clearfix"></div>
+<h3>Tag</h3>
+<div id="tag_list">
+    <img src="/diarysys5/img/ajax-loader1.gif" alt="loading">
+</div>
+<h3>Description</h3>
+<textarea name="description" id="entry_textarea"></textarea><input type="submit" value="&#26085;&#35352;&#12434;&#30331;&#37682;" id="confirm"><input type="button" value="&#12503;&#12524;&#12499;&#12517;&#12540;" id="preview"><label><input type="checkbox" checked id="realtime">&#12522;&#12450;&#12523;&#12479;&#12452;&#12512;&#12503;&#12524;&#12499;&#12517;&#12540;</label>
+<label><input type="checkbox" checked id="image_no_preview">&#30011;&#20687;&#12434;&#12503;&#12524;&#12499;&#12517;&#12540;&#12375;&#12394;&#12356;</label>
+<input type="hidden" name="__CSRF_TOKEN__" value="<?php echo $__csrf_token__; ?>">
+</form>
+<?php ${self::HELPER_RECEIVER}->entry_register($entry); ?></body>

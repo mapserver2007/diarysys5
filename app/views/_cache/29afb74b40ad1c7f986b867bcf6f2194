@@ -1,0 +1,19 @@
+<body><div class="login">
+    <form method="post" action="/diarysys5/login">
+        <table><tbody>
+<tr>
+<td>&#12497;&#12473;&#12527;&#12540;&#12489;&#65306;</td>
+                    <td>
+                        <input id="password" name="password" type="password">
+</td>
+                </tr>
+<tr>
+<td>&nbsp;</td>
+                    <td>
+                        <input type="submit" value="&#12525;&#12464;&#12452;&#12531;">
+</td>
+                </tr>
+</tbody></table>
+<input type="hidden" name="user_id" value="<?php echo safetyOut($user_id); ?>"><input type="hidden" name="__CSRF_TOKEN__" value="<?php echo $__csrf_token__; ?>">
+</form>
+</div></body>

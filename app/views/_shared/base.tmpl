@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8"/>
+        <link type="text/css" rel="stylesheet" href="/diarysys5/css/diarysys.css" />
+        <link type="text/css" rel="stylesheet" href="/diarysys5/css/lib/quicktags_plus.css" />
+        <link type="text/css" rel="stylesheet" href="/diarysys5/css/lib/fancybox.css" />
+        <link type="text/css" rel="stylesheet" href="/diarysys5/css/lib/prettify.css" />
+        <link type="text/css" rel="stylesheet" href="/diarysys5/css/lib/tablesorter.css" />
+        <script type="text/javascript" src="/diarysys5/js/lib/mix.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/lib/mix.modules.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/lib/jquery.min.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/lib/jquery.ba-postmessage.min.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/lib/prettify.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/lib/quicktags_plus.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/lib/jquery.fancybox-1.3.4.pack.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/lib/jquery.tablesorter.min.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/diarysys.modules.js"></script>
+        <script type="text/javascript" src="/diarysys5/js/diarysys.js"></script>
+        <title>%{$title}</title>
+    </head>
+    <body>
+        <div id="main_container">
+            <% $this->layout($header_template, $header) %>
+            <% $this->render($template, $content) %>
+        </div>
+    </body>
+</html>

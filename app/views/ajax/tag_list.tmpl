@@ -1,0 +1,10 @@
+<div class="tag_list">
+    <ul>
+    <% foreach($tags as $tag) : %>
+        <li id="tag_%{$tag["ID"]}">
+            <span>%{$tag["NAME"]}</span>
+            <sup>%{$tag["COUNT"]}</sup>
+        </li>
+    <% endforeach %>
+    </ul>
+</div>

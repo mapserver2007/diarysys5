@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+    xmlns:admin="http://webns.net/mvcb/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <channel>
+        <title>%{$title}</title>
+        <link>%{$link}</link>
+        <description>%{$description}</description>
+        <language>%{$language}</language>
+        <copyright>%{$copyright}</copyright>
+        <lastBuildDate>%{$lastBuildDate}</lastBuildDate>
+        <generator>%{$generator}</generator>
+        <docs>%{$docs}</docs>
+        <% foreach($contents as $content) : %>
+        <item>
+            <title>#{$content["title"]}</title>
+            <link>#{$content["link"]}</link>
+            <description>#{$content["description"]}</description>
+            <dc:subject>#{$content["dc:subject"]}</dc:subject>
+            <dc:creator>#{$content["dc:creator"]}</dc:creator>
+            <dc:date>#{$content["dc:date"]}</dc:date>
+        </item>
+        <% endforeach %>
+    </channel>
+</rss>

@@ -1,0 +1,34 @@
+<div id="confirm_container">
+    <h3>以下の内容で登録します。よろしいですか？</h3>
+    <div id="entry_container">
+        <div class="entry_preview">
+            <div class="entry_header">
+                <p id="title_preview" class="entry_title">%{$title}</p>
+                <div class="entry_subinfo">
+                    <span class="tag" id="tag_preview">!{showTags($tagNames)}</span>
+                    <span class="weather">
+                        <img src="%{$weather}" alt="今日の天気" />
+                    </span>
+                    <span class="date">
+                        %{$date}
+                    </span>
+                </div>
+            </div>
+            <div id="text_preview">#{$description_html}</div>
+        </div>
+    </div>
+    <form action="/diarysys5/register" method="post">
+        <input type="hidden" name="title" value="%{$title}" />
+        <input type="hidden" name="description" value="%{$description}" />
+        <input type="hidden" name="date" value="%{$date}" />
+        <input type="hidden" name="weather" value="!{weather_id($weather)}" />
+        !{setTags($tags)}
+        <input type="submit" value="エントリ内容を修正する" id="remand" />
+        <input type="submit" value="エントリ内容を登録する" />
+    </form>
+</div>
+<script type="text/javascript">
+    var obj = entryConfirm();
+    obj.subHeader(1);
+    obj.plugin();
+</script>

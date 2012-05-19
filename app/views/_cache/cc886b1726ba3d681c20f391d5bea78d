@@ -1,0 +1,35 @@
+<body>
+<h3>New Tag</h3>
+<table><tr>
+<td>
+            <form action="/diarysys5/tag_list" method="post">
+                <input type="text" id="new_tag"><input type="button" id="add_tag" value="&#36861;&#21152;"><input type="hidden" name="__CSRF_TOKEN__" value="<?php echo $__csrf_token__; ?>">
+</form>
+        </td>
+        <td>
+            <div id="success_message"></div>
+            <div id="failure_message"></div>
+        </td>
+    </tr></table>
+<div class="tag_list_title">
+    <h3>Tag List</h3>
+</div>
+<div class="tag_search">
+    <input type="text" id="tag_search">
+</div>
+<div class="clearfix"></div>
+<div id="tag_list">
+    <img src="/diarysys5/img/ajax-loader1.gif" alt="loading">
+</div>
+<div id="tag_list_org"></div>
+
+<table><tr>
+<td><input type="button" id="del_tag" value="&#26410;&#20351;&#29992;&#12479;&#12464;&#12434;&#20840;&#12390;&#21066;&#38500;"></td>
+        <td><div id="delete_result"></div></td>
+    </tr></table>
+<script type="text/javascript">
+    var obj = tagRegister();
+    obj.subHeader(2);
+    obj.search();
+</script>
+</body>
