@@ -1,5 +1,5 @@
 # diarysys5
-stream framework,mix.jsをベースにしたブログです。
+stream framework/mix.jsをベースにしたブログです。
 
 ##License
 Licensed under the MIT

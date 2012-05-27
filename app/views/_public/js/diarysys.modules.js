@@ -51,6 +51,13 @@ Mixjs.module("Util", D, {
     },
     
     /**
+     * テーブルソート
+     */
+    tableSorter: function() {
+        $("#entry_list").tablesorter();
+    },
+    
+    /**
      * BBコードをHTMLに変換する
      * @param String 変換対象文字列
      * @return String 変換後の文字列
@@ -162,6 +169,43 @@ Mixjs.module("PostMessage", D, {
                 obj[d[0]] = decodeURIComponent(d[1].replace(/\+/g, " "));
             }
             callback.call(self, obj);
+        });
+    }
+});
+
+/**
+ * エントリ一覧関連モジュール
+ */
+Mixjs.interface(D.Common).module("EntryList", D, {
+    /** 依存モジュール */
+    include: D.Util,
+    
+    /**
+     * 初期処理
+     */
+    init: function() {
+        this.event();
+        return this;
+    },
+    
+    /**
+     * イベントを設定
+     */
+    event: function() {
+        var self = this;
+        $(function() {
+            self.tableSorter();
+        });
+        $(".delete_button, .edit_button").each(function() {
+            $(this).click(function() {
+                var action = $(this).attr("href");
+                var id = $(this).children("div.entry_id").text();
+                $("form").attr("action", action);
+                $("#entry_id").val(id);
+                $("#entry_submit").trigger("click");
+                
+                return false;
+            })
         });
     }
 });
@@ -472,7 +516,7 @@ Mixjs.interface(D.Common).module("Tag", D, {
         });
         $("#del_tag").click(function() {
             $("#success_message, #failure_message").empty();
-            self.delete();
+            self.remove();
         });
         this.list();
         
@@ -536,7 +580,7 @@ Mixjs.interface(D.Common).module("Tag", D, {
     /**
      * タグを削除する
      */
-    delete: function() {
+    remove: function() {
         var self = this;
         if (window.confirm("使われていないタグを全て削除しますか？")) {
             this.xhr({

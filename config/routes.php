@@ -20,6 +20,8 @@ Router::setRule(
         '/confirm' => "manage#confirm",
         '/register' => "manage#register",
         '/remand' => "manage#remand",
+        '/delete' => "manage#delete",
+        '/edit' => "manage#edit",
         '/tag_register' => "manage#tag_register",
         '/tag_list' => "ajax#tag_list",
         '/tag_delete' => "ajax#tag_delete",

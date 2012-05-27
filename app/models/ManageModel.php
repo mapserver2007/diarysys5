@@ -72,6 +72,15 @@ class ManageModel extends CoreModel {
     }
     
     /**
+     * エントリを削除する
+     * @param Integer エントリID
+     */
+    public function deleteEntry($id) {
+        
+    }
+    
+    
+    /**
      * タグを登録する
      * @param Integer エントリID
      * @param Integer タグID

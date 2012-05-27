@@ -1,19 +1,20 @@
+<body>
+<form action="/diarysys5" method="post" style="display: none;">
+	<input type="hidden" name="entry_id" id="entry_id"><input type="submit" id="entry_submit"><input type="hidden" name="__CSRF_TOKEN__" value="<?php echo $__csrf_token__; ?>">
+</form>
 <table id="entry_list" class="tablesorter">
-    <thead>
-        <tr>
-            <th>日付</th>
-            <th>タイトル</th>
-            <th>タグ</th>
-            <th>削除</th>
-            <th>編集</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php ${self::HELPER_RECEIVER}->entry_list($entry); ?>
+<thead><tr>
+<th>&#26085;&#20184;</th>
+            <th>&#12479;&#12452;&#12488;&#12523;</th>
+            <th>&#12479;&#12464;</th>
+            <th>&#21066;&#38500;</th>
+            <th>&#32232;&#38598;</th>
+        </tr></thead>
+<tbody>
+<?php ${self::HELPER_RECEIVER}->entry_list($entry); ?>
     </tbody>
 </table>
 <script type="text/javascript">
-    $(function() {
-        $("#entry_list").tablesorter();
-    });
+	entryList();
 </script>
+</body>

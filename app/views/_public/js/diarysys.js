@@ -3,6 +3,11 @@ function hitorigoto() {
     D.Hitorigoto.xhr();
 }
 
+/** エントリ一覧 */
+function entryList() {
+	D.EntryList.init();
+}
+
 /** エントリ表示画面 */
 function entry() {
     D.PageLayout.plugin();

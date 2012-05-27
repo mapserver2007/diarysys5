@@ -46,8 +46,18 @@ class ManageHelper {
             <td>${entry["DATE"]}</td>
             <td>${entry["TITLE"]}</td>
             <td>${tag}</td>
-            <td><button type="button"><img src="/diarysys5/img/delete.png"/></button></td>
-            <td><button type="button"><img src="/diarysys5/img/edit.png"/></button></td>
+            <td>
+                <a href="/diarysys5/delete" class="delete_button">
+                    <img src="/diarysys5/img/delete.png"/>
+                    <div class="entry_id">${entry["ID"]}</div>
+                </a>
+            </td>
+            <td>
+                <a href="/diarysys5/edit" class="edit_button">
+                    <img src="/diarysys5/img/edit.png"/>
+                    <div class="entry_id">${entry["ID"]}</div>
+                </a>
+            </td>
         </tr>
 ENTRY_LIST2;
         }

@@ -154,4 +154,32 @@ class ManageController extends AppController {
             "content" => array()
         )));
     }
+    
+    /**
+     * エントリ削除確認画面を描画する
+     */
+    public function deleteConfirm($id) {
+        // エントリ内容を取得する
+    }
+
+    /**
+     * エントリを削除する
+     */
+    public function delete() {
+        $id = $this->request->post("entry_id");
+        
+        
+        
+        
+    }
+    
+    /**
+     * エントリを編集する
+     */
+    public function edit() {
+        $id = $this->request->post("entry_id");
+        var_dump($id);
+    }
+
+
 }

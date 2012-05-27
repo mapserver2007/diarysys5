@@ -34,6 +34,19 @@ class ManageService extends CoreService {
     }
     
     /**
+     * 差し戻しエントリ内容を取得する
+     * @return Hash 差し戻しエントリ内容
+     */
+    public function remandLoad() {
+        $cache = new Cache();
+        $data = $cache->get(Constants::REMAND_ENTRY_TEMPORARY_CACHE_ID);
+        if ($data !== null) {
+            $cache->delete(Constants::REMAND_ENTRY_TEMPORARY_CACHE_ID);
+        }
+        return $data;
+    }
+    
+    /**
      * エントリデータ一覧を取得する
      */
     public function entryList($page) {
@@ -94,16 +107,23 @@ class ManageService extends CoreService {
     }
     
     /**
-     * 差し戻しエントリ内容を取得する
-     * @return Hash 差し戻しエントリ内容
+     * エントリを削除する
+     * @param Integer エントリID
      */
-    public function remandLoad() {
-        $cache = new Cache();
-        $data = $cache->get(Constants::REMAND_ENTRY_TEMPORARY_CACHE_ID);
-        if ($data !== null) {
-            $cache->delete(Constants::REMAND_ENTRY_TEMPORARY_CACHE_ID);
+    public function delete($id) {
+        if (!$this->Manage->deleteEntry($id)) {
+            throw new Exception("Entry delete failure: " . $id);
         }
-        return $data;
+    }
+    
+    /**
+     * エントリを編集する
+     * @param Integer エントリID
+     */
+    public function edit($id) {
+        if (!$this->Manage->editEntry($id)) {
+            throw new Exception("Entry delete failure: " . $id);
+        }
     }
     
     /**

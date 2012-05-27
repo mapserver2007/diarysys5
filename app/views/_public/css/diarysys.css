@@ -274,6 +274,11 @@ sup.entry_count {
     color: #888;
 }
 
+/** entry list */
+div.entry_id {
+	display: none;
+}
+
 /** login */
 div.login {
     padding: 30px;
