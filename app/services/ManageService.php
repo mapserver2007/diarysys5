@@ -191,7 +191,7 @@ class ManageService extends CoreService {
         $num = 0;
         if ($handle = opendir($dir)) {
             while (false !== ($entry = readdir($handle))) {
-                if (!in_array($entry, array(".", "..", ".svn"))) {
+                if (!in_array($entry, array(".", "..", ".svn", ".htaccess"))) {
                     $num++;
                 }
             }
