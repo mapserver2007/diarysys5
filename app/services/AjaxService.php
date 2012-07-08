@@ -67,7 +67,7 @@ class AjaxService extends CoreService {
         $offset = $limit * ($page - 1);
         if ($handle = opendir($dir)) {
             while (false !== ($entry = readdir($handle))) {
-                if (!in_array($entry, array(".", "..", ".svn"))) {
+                if (!in_array($entry, array(".", "..", ".svn", ".htaccess"))) {
                     $filepath = $dir . "/" . $entry;
                     $hash[filemtime($filepath)] = $entry;
                 }
