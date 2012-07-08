@@ -2,5 +2,6 @@
 .settings
 .DS_Store
 config/*.ini
+views/_public/img/upload/*
 *.log
 *.status

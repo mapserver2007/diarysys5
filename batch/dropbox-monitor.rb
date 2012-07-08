@@ -22,7 +22,7 @@ SMALL_HEIGHT = 300
 module Utils
   class << self
     def realpath(path)
-      Pathname.new(path).realpath
+      Pathname.new(path).cleanpath
     end
     
     def file?(e)
@@ -102,7 +102,7 @@ OptionParser.new do |opt|
   opt.parse!
 end
 
-filetype = "**/*.{jpg,jpeg,gif,png}"
+filetype = "**/*.{jpg,jpeg,gif,png,JPG,JPEG,GIF,PNG}"
 dropbox_dir = config[:dropbox_dir]
 
 # directory check

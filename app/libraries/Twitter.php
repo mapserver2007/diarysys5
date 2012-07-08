@@ -13,7 +13,7 @@ require_once 'HTTP/OAuth/Consumer.php';
 class Twitter {
     const API_URL = "http://api.twitter.com/1/statuses/user_timeline.xml";
     const STATUS_URL = "http://twitter.com/%s/status/%s";
-    const ICON_URL = "http://img.tweetimag.es/i/%s_b";
+    const ICON_URL = "https://api.twitter.com/1/users/profile_image?screen_name=%s&size=bigger";
     
     /** キャッシュID */
     const CACHE_ID = "twitter_cache";

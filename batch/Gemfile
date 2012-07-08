@@ -1,0 +1,3 @@
+source :rubygems
+gem 'fssm', '=0.2.8'
+gem 'rmagick'
