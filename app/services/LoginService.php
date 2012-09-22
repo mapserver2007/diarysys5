@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * ログインサービス
  * @author Ryuichi TANAKA.

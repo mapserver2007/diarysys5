@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * Ajax系処理
  * @author Ryuichi TANAKA.

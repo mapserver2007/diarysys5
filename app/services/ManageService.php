@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * 管理サービス
  * @author Ryuichi TANAKA.

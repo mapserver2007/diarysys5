@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * Twitterライブラリ
  * @author Ryuichi TANAKA.
@@ -48,7 +49,7 @@ class Twitter {
      * @return Object OAuthオブジェクト
      */                 
     private function auth() {
-        $consumer = new HTTP_OAuth_Consumer(
+        $consumer = new \HTTP_OAuth_Consumer(
             $this->consumer_key,
             $this->consumer_secret
         );

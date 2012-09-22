@@ -1,4 +1,8 @@
 <?php
+namespace WebStream\Test;
+use WebStream\Router;
+use WebStream\Utility;
+use WebStream\HttpAgent;
 /**
  * Routerクラスのテストクラス
  * @author Ryuichi TANAKA.
@@ -330,6 +334,54 @@ class RouterTest extends UnitTestBase {
     }
     
     /**
+     * 正常系
+     * JSONを描画できること
+     */
+    public function testOkJson() {
+        $http = new HttpAgent();
+        $url = $this->root_url . "/json";
+        $http->get($url);
+        $this->assertEquals("Content-Type: application/json; charset=UTF-8", $http->getContentType());
+    }
+    
+    /**
+     * 正常系
+     * JSONPを描画できること
+     */
+    public function testOkJsonp() {
+        $http = new HttpAgent();
+        $url = $this->root_url . "/jsonp";
+        $http->get($url);
+        $this->assertEquals("Content-Type: text/javascript; charset=UTF-8", $http->getContentType());
+    }
+    
+    /**
+     * 正常系
+     * BeforeFilterとAfterFilterがアノテーション付与で実行出来ること
+     */
+    public function testOkFilterByAnnotation() {
+        $http = new HttpAgent();
+        $url = $this->root_url . "/filter";
+        $this->assertEquals("beforeactionafter", $http->get($url));
+    }
+    
+    /**
+     * 正常系
+     * 基本認証を正常に処理できること
+     */
+    public function testOkBasicAuthByAnnotation() {
+        $http = new HttpAgent(array(
+            "basic_auth_id" => "test",
+            "basic_auth_password" => "test"
+        ));
+        $url = $this->root_url . "/basic_auth";
+        $response = $http->get($url);
+        $status_code = $http->getStatusCode();
+        $this->assertEquals($status_code, "200");
+        $this->assertEquals($response, "basicauth");
+    }
+    
+    /**
      * 異常系
      * 存在しないコントローラまたはアクションが指定された場合、500エラーになること
      * @dataProvider resolveUnknownProvider
@@ -403,30 +455,6 @@ class RouterTest extends UnitTestBase {
     
     /**
      * 異常系
-     * beforeメソッドはアクションに指定した場合、500エラーになること
-     * @dataProvider resolveBeforeProvider
-     */
-    public function testNgResolveBefore($path) {
-        $url = $this->root_url . $path;
-        @file_get_contents($url);
-        list($version, $status_code, $msg) = explode(' ', $http_response_header[0], 3);
-        $this->assertEquals($status_code, "500");
-    }
-    
-    /**
-     * 異常系
-     * afterメソッドはアクションに指定した場合、500エラーになること
-     * @dataProvider resolveAfterProvider
-     */
-    public function testNgResolveAfter($path) {
-        $url = $this->root_url . $path;
-        @file_get_contents($url);
-        list($version, $status_code, $msg) = explode(' ', $http_response_header[0], 3);
-        $this->assertEquals($status_code, "500");
-    }
-    
-    /**
-     * 異常系
      * コントローラ名に半角小文字英字、数字以外が含まれている場合、500エラーになること
      * @dataProvider resolveCamelControllerProvider
      */
@@ -441,7 +469,7 @@ class RouterTest extends UnitTestBase {
      * 異常系
      * ルーティングルールが指定された文字以外で構成されていた場合、例外が発生すること
      * @dataProvider resolveInvalidPathProvider
-     * @expectedException RouterException
+     * @expectedException WebStream\RouterException
      */
     public function testNgResolveInvalidPath($path) {
         Router::setRule(array(
@@ -454,7 +482,7 @@ class RouterTest extends UnitTestBase {
      * 異常系
      * ルーティングルールに静的ファイルへのパスが指定された場合、例外が発生すること
      * @dataProvider prohibitPathProvider
-     * @expectedException RouterException
+     * @expectedException WebStream\RouterException
      */
     public function testNgProhibitPath($path) {
         Router::setRule(array(
@@ -627,7 +655,29 @@ class RouterTest extends UnitTestBase {
                        $line_tail, $matches)) {
             $target = array("ERROR", $error_msg);
             $result = array($matches[1], $matches[2]);
-            $this->assertEquals($target, $result);           
+            $this->assertEquals($target, $result);
         }
+    }
+    
+    /**
+     * 異常系
+     * 「@BasicAuth」アノテーションが正常に付与されていて、認証エラーが発生した場合、401が返却されること
+     */
+    public function testNgBasicAuthByAnnotation() {
+        $http = new HttpAgent();
+        $url = $this->root_url . "/basic_auth";
+        $http->get($url);
+        $this->assertEquals($http->getStatusCode(), "401");
+    }
+
+    /**
+     * 異常系
+     * 「@BasicAuth」アノテーションの設定ファイルパスが間違っている場合、404が返却されること
+     */
+    public function testNgBasicAuthConfigFileNotFound() {
+        $http = new HttpAgent();
+        $url = $this->root_url . "/basic_auth2";
+        $http->get($url);
+        $this->assertEquals($http->getStatusCode(), "404");
     }
 }

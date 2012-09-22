@@ -1,12 +1,18 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    evernote (1.2.1)
+      thrift_client (>= 0.8.1)
     fssm (0.2.8)
     rmagick (2.13.1)
+    thrift (0.8.0)
+    thrift_client (0.8.1)
+      thrift (~> 0.8.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  evernote
   fssm (= 0.2.8)
   rmagick

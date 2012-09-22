@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * リクエストクラス
  * @author Ryuichi TANAKA.
@@ -134,6 +135,22 @@ class Request {
      */
     public function userAgent() {
         return $this->server("HTTP_USER_AGENT");
+    }
+    
+    /**
+     * Basic認証のユーザIDを取得する
+     * @return String Basic認証ユーザID
+     */
+    public function authUser() {
+        return $this->server("PHP_AUTH_USER");
+    }
+    
+    /**
+     * Basic認証のパスワードを取得する
+     * @return String Basic認証パスワード
+     */
+    public function authPassword() {
+        return $this->server("PHP_AUTH_PW");
     }
     
     /**

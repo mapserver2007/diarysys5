@@ -4,7 +4,7 @@
 </div>
 <div id="img_container"></div>
 <script type="text/javascript">
-    var obj = imageList(<?php echo safetyOut($page); ?>);
+    var obj = imageList(<?php echo \WebStream\safetyOut($page); ?>);
     obj.fancybox();
     obj.subHeader(3);
 </script>

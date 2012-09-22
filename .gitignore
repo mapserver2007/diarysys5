@@ -2,6 +2,7 @@
 .settings
 .DS_Store
 config/*.ini
+crawler/config/*.yml
 app/views/_public/img/upload/*
 *.log
 *.status

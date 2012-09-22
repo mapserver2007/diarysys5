@@ -1,5 +1,5 @@
 <div style="float: left;">
-    <img src="<?php echo safetyOut($tweet['icon']); ?>" alt="icon" />
+    <img src="<?php echo \WebStream\safetyOut($tweet['icon']); ?>" alt="icon" />
 </div>
 <div class="hitorigoto_left">
     <div class="hitorigoto_kuchi_t"></div>
@@ -7,10 +7,10 @@
     <div class="hitorigoto_kuchi_b"></div>
 </div>
 <div class="hitorigoto_right">
-    <p><?php echo safetyOut($tweet['text']); ?></p>
+    <p><?php echo \WebStream\safetyOut($tweet['text']); ?></p>
 </div>
 <div class="clearfix">
     <div class="hitorigoto_date">
-        <?php echo safetyOut($tweet['created_at']); ?> from <a href="<?php echo safetyOut($tweet['link']); ?>">Twitter</a>
+        <?php echo \WebStream\safetyOut($tweet['created_at']); ?> from <a href="<?php echo \WebStream\safetyOut($tweet['link']); ?>">Twitter</a>
     </div>
 </div>

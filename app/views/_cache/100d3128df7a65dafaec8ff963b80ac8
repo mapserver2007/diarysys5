@@ -1,10 +1,10 @@
 <div id="title_container">
-    <p id="site_title"><?php echo safetyOut($site_title); ?></p>
-    <p id="site_summary"><?php echo safetyOut($site_summary); ?></p>
+    <p id="site_title"><?php echo \WebStream\safetyOut($site_title); ?></p>
+    <p id="site_summary"><?php echo \WebStream\safetyOut($site_summary); ?></p>
 </div>
 <div id="login_container">
     <div id="login">
-        <?php echo safetyOut($user_id); ?> | 
+        <?php echo \WebStream\safetyOut($user_id); ?> | 
         <a href="/diarysys5/logout">ログアウト</a>
     </div>
 </div>

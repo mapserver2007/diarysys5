@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * Paginateライブラリ
  * @author Ryuichi TANAKA.

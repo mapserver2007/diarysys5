@@ -1,5 +1,5 @@
 <?php
-
+namespace WebStream;
 class DebugController extends AppController {
     
     

@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * ルーティングクラス
  * @author Ryuichi TANAKA.
@@ -14,7 +15,6 @@ class Router {
     
     /**
      * コンストラクタ
-     * @param Array ルーティングルール
      */
     public function __construct() {
         $request = new Request();
@@ -32,7 +32,7 @@ class Router {
     }
     
     /**
-     * 禁止されたルーティングルールをチェックする
+     * ルーティングルールを検証する
      */
     private function validate() {
         // パス定義部分('/xxx')は禁止の定義がされた時点でエラーとする
@@ -56,7 +56,7 @@ class Router {
                 if (preg_match('/^(?:([a-z]{1}(?:_(?=[a-z])|[a-z0-9])+))#(?:([a-z]{1}(?:_(?=[a-z])|[a-z0-9])+))$/', $ca, $matches)) {
                     // アクション名にrender, errorが指定された場合
                     // 正しいルーティング定義のとき、かつ、定義禁止メソッドが指定された場合にエラーとする
-                    if (preg_match('/#(re(?:nder(?:_(?:error|atom|file|json|rss|xml))?|(?:quest_(?:pos|ge)|direc)t)|(?:befor|mov|pag)e|l(?:ayout|oad)|session|after|csrf)$/',
+                    if (preg_match('/#(re(?:nder(?:_(?:error|atom|file|json|rss|xml))?|(?:quest_(?:pos|ge)|direc)t)|(?:mov|pag)e|l(?:ayout|oad)|session|csrf)$/',
                         $ca, $matches)) {
                         throw new RouterException("Definition of the method is prohibited: " . $matches[1]);
                     }
@@ -74,8 +74,6 @@ class Router {
      * @param Array ルーティングルール
      */
     public function resolve() {
-        // ルーティングパラメータ
-        $routes = array();
         // ルーティングルールからController、Actionを取得
         foreach (self::$rules as $path => $ca) {
             $route = array();

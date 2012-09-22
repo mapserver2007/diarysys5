@@ -1,14 +1,24 @@
 <?php
+namespace WebStream;
 require '../../../core/AutoImport.php';
-// core以下のファイル、ルーティングルールをロード
+require '../../../core/Functions.php';
+
+function __autoload($class_name) {
+    import("core/test/testdata/config/" . $class_name);
+}
+
+register_shutdown_function('WebStream\shutdownHandler');
+
+// core以下のファイル、ルーティングルール、バリデーションルールをロード
 importAll("core");
 import("core/test/testdata/config/routes");
+import("core/test/testdata/config/validates");
 
 // ログ出力ディレクトリ、ログレベルをテスト用に変更
 Logger::init("core/test/testdata/config/log.ini");
 
 $controller_test_dir = "core/test/testdata/app";
-$class = new ReflectionClass("Application");
+$class = new \ReflectionClass("WebStream\Application");
 $instance = $class->newInstance();
 $property = $class->getProperty("app_dir");
 $property->setAccessible(true);

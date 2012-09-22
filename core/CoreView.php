@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * Coreクラス
  * @author Ryuichi TANAKA.
@@ -48,11 +49,20 @@ class CoreView {
     /**
      * JSONを描画する
      * @param Hash 出力データ
+     */
+    final public function json($params) {
+        $this->outputHeader("json");
+        echo json_encode($params);
+    }
+    
+    /**
+     * JSONPを描画する
+     * @param Hash 出力データ
      * @param String コールバック関数名
      */
-    final public function json($params, $callback = null) {
-        $this->outputHeader("application/json");
-        echo json_encode($params);
+    final public function jsonp($params, $callback) {
+        $this->outputHeader("jsonp");
+        echo $callback . "(" . json_encode($params) . ");";
     }
     
     /**
@@ -84,22 +94,21 @@ HTML;
     final private function draw($template_path, $params, $type) {
         // テンプレートファイルがない場合エラー
         if (!file_exists(realpath($template_path))) {
-            throw new Exception("Invalid template file path: " . $template_path);
+            throw new TemplateNotFoundException("Invalid template file path: " . $template_path);
         }
         
         // 埋め込みパラメータにHelperを起動するためのオブジェクトをセット
         $params[self::HELPER_RECEIVER] = new CoreHelper($this->page_name);
 
         // キャッシュファイルがなければ生成する
-        $filename = preg_replace_callback('/.*views\/(.*)\.tmpl$/', create_function(
-            '$matches',
-            'return $matches[1] . \'.cache\';'
-        ), $template_path);
+        $filename = preg_replace_callback('/.*views\/(.*)\.tmpl$/', function($matches) {
+            return $matches[1] . '.cache';
+        }, $template_path);
         $cache_file = STREAM_ROOT . '/' . STREAM_APP_DIR . '/views/' . STREAM_VIEW_CACHE . "/" . md5($filename);
 
         // テンプレートが見つからない場合は500になるのでエラー処理は不要
         $content = $this->convert(file_get_contents($template_path));
-        
+
         // formタグが含まれる場合はCSRFトークンを付与する
         if (preg_match('/<form.*?>.*?<\/form>/is', $content)) {
             $this->addToken($params, $content);
@@ -111,9 +120,9 @@ HTML;
 
         // テンプレートに書き出す
         if (!file_exists($cache_file) || filemtime($cache_file) < filemtime($template_path)) {
-            file_put_contents($cache_file, $content);
+            file_put_contents($cache_file, $content, LOCK_EX);
         }
-        
+        Logger::info($content);
         $this->outputHeader($type);
         $this->outputHTML($params, $cache_file);
     }
@@ -152,7 +161,7 @@ HTML;
         // <meta>タグによるcharsetが指定されない場合は文字化けするのでその対策を行う
         $content = mb_convert_encoding($content, 'html-entities', "UTF-8"); 
         // DOMでformにアペンドする
-        $doc = new DOMDocument();
+        $doc = new \DOMDocument();
         // テンプレートがが断片でなく、完全の場合(layoutを使わずrenderだけで描画した場合)
         // 警告が出るが処理は正常に実行出来るので無視する
         @$doc->loadHTML($content);
@@ -176,7 +185,7 @@ HTML;
             $bodyNode = $bodyNodeList->item(0);
             $children = $bodyNode->childNodes;
             foreach ($children as $child) {
-                $tmp = new DOMDocument();
+                $tmp = new \DOMDocument();
                 $tmp->formatOutput = true;
                 $tmp->appendChild($tmp->importNode($child, true));
                 $innerHTML .= trim($tmp->saveHTML());
@@ -187,7 +196,8 @@ HTML;
         $map = array('&gt;' => '>',
                      '&lt;' => '<',
                      '%20'  => ' ',
-                     '%24'  => '$');
+                     '%24'  => '$',
+                     '%5C'  => '\\');
         $content = str_replace(array_keys($map), array_values($map), $content);
     }
 
@@ -219,7 +229,7 @@ HTML;
     final private function convert($s) {
         $s = preg_replace('/^<\?xml/', '<<?php ?>?xml', $s);
         $s = preg_replace('/#\{(.*?)\}/', '<?php echo $1; ?>', $s);
-        $s = preg_replace('/%\{(.*?)\}/', '<?php echo safetyOut($1); ?>', $s);
+        $s = preg_replace('/%\{(.*?)\}/', '<?php echo \WebStream\safetyOut($1); ?>', $s);
         $s = preg_replace('/<%\s(.*?)\s%>/', '<?php $1; ?>', $s);
         $s = preg_replace('/!\{(.*?)\}/', '<?php ${self::HELPER_RECEIVER}->$1; ?>', $s);
         return $s;

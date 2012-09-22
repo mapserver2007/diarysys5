@@ -1,10 +1,14 @@
 <?php
+namespace WebStream\Test;
+use WebStream\Logger;
+use WebStream\Utility;
+use WebStream\Cache;
 /**
  * テストクラスのベースクラス
  * @author Ryuichi TANAKA.
  * @since 2011/08/25
  */
-class UnitTestBase extends PHPUnit_Framework_TestCase {
+class UnitTestBase extends \PHPUnit_Framework_TestCase {
     /** テスト用ルートURL */
     protected $document_root = "http://localhost/";
     protected $project_name = "WebStream";
@@ -36,7 +40,8 @@ SQL;
 
     protected function loadModule() {
         require_once $this->getRoot() . "/core/AutoImport.php";
-        importAll("core");
+        require_once $this->getRoot() . "/core/Functions.php";
+        \WebStream\importAll("core");
         $this->root_url = $this->document_root . $this->project_name . $this->testdata_dir;
     }
 
@@ -411,7 +416,7 @@ SQL;
     }
 
     public function saveProvider() {
-        import("core/Cache");
+        \WebStream\import("core/Cache");
         return array(
             array("cache_test_save_string", "abcde"),
             array("cache_test_save_integer", 12345),
@@ -516,6 +521,21 @@ SQL;
             array("test_hoge_hoge", "testHogeHoge")
         );
     }
+
+    public function snake2UpperCamelProvider() {
+        return array(
+            array("Test", "test"),
+            array("TestHoge", "test_hoge"),
+            array("TestHogeHoge", "test_hoge_hoge")
+        );
+    }
+
+    public function snake2LowerCamelProvider() {
+        return array(
+            array("testHoge", "test_hoge"),
+            array("testHogeHoge", "test_hoge_hoge")
+        );
+    }
     
     public function renderTemplateProvider() {
         return array(
@@ -578,7 +598,7 @@ SQL;
     
     public function notFoundRenderMethodProvider() {
         return array(
-            array("/notfound_render", "TestController#render_dummy is not defined.")
+            array("/notfound_render", "WebStream\\TestController#render_dummy is not defined.")
         );
     }
     
@@ -668,4 +688,100 @@ SQL;
             array("/attr", $html)
         );
     }
+    
+    public function executeSQL() {
+        return array(
+            array("select * from users"),
+            array("select * from users where user_name = :name", array("name" => "yui"))
+        );
+    }
+    
+    public function validRule() {
+        return array(
+            array("validates.ok1")
+        );
+    }
+    
+    public function getParameterValidation() {
+        return array(
+            array("/get_validate1", "?name1=test")
+        );
+    }
+
+    public function invalidController() {
+        return array(
+            array("validates.ng1")
+        );
+    }
+
+    public function invalidAction() {
+        return array(
+            array("validates.ng2")
+        );
+    }
+
+    public function invalidRule() {
+        return array(
+            array("validates.ng3"),
+            array("validates.ng4"),
+            array("validates.ng5"),
+            array("validates.ng6"),
+            array("validates.ng7"),
+            array("validates.ng8")
+        );
+    }
+    
+    public function lessThanMinLengthParameter() {
+        return array(
+            array("aaaaaaaaa"), // 9
+            array("あああああああああ") // 9
+        );
+    }
+
+   public function moreThanMaxLengthParameter() {
+        return array(
+            array("aaaaaaaaaaa"), // 11
+            array("あああああああああああ") // 11
+        );
+    }
+   
+   public function lessThanMinParameter() {
+       return array(
+            array("-100"), // マイナス値
+            array("99"), // 境界値
+            array("99.9999") // 小数値
+        );
+   }
+
+   public function moreThanMaxParameter() {
+       return array(
+            array("201"), // 境界値
+            array("222.222") // 少数
+        );
+   }
+   
+   public function notEqualLengthParameter() {
+       return array(
+            array("aaaaaaaaa"), // 境界値9
+            array("aaaaaaaaaaa"), // 境界値11
+            array("あああああああああ"), // 境界値9
+            array("あああああああああああ") // 境界値11
+        );
+   }
+   
+   public function outOfRangeParameter() {
+       return array(
+           array("9"), // low範囲外
+           array("21"), // high範囲外
+       );
+   }
+   
+   public function validateErrorHandlingMulti() {
+       return array(
+           array("a", "min_length[2]"), // min_length
+           array("yui", "equal[kyouko]") // equal
+       );
+   }
+   
+   
 }

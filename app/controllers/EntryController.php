@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * エントリコントローラ
  * @author Ryuichi TANAKA.

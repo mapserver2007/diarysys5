@@ -1,5 +1,5 @@
 <?php
-
+namespace WebStream;
 
 class DebugService extends CoreService {
     

@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * Cacheクラス
  * @author Ryuichi Tanaka
@@ -114,7 +115,7 @@ class Cache {
                     }
                     Logger::error("Can't create cache: ${cache_path}");
                 }
-                catch (Exception $e) {
+                catch (\Exception $e) {
                     Logger::error($e->getMessage(), $e->getTraceAsString());
                 }
             }
@@ -130,14 +131,13 @@ class Cache {
      * @param String キャッシュID
      */
     public function delete($id) {
-        $path = $this->save_path . $id . '.cache';
         $cache_path = realpath($this->save_path . $id . '.cache');
         if ($cache_path) {
             Logger::debug("Cache delete success: ${cache_path}");
             return unlink($cache_path);
         }
         else {
-            Logger::error("Cache delete failure: ${path}");
+            Logger::error("Cache delete failure: ${cache_path}");
             return false;
         }
     }

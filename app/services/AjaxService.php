@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * Ajaxサービス
  * @author Ryuichi TANAKA.

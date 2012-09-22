@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * フィードサービス
  * @author Ryuichi TANAKA.

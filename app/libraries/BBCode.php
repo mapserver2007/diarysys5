@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * BBコードをHTMLに置換するクラス
  * @author Ryuichi TANAKA.

@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * ルーティングルールを記述する
  */
@@ -13,8 +14,7 @@ Router::setRule(
         '/layout' => "test#layout",
         '/redirect' => "test#redirect",
         '/load' => "test#load",
-        '/before' => "test#before",
-        '/after' => "test#after",
+        '/filter' => "test_filter_annotation#execute",
         '/error2' => "Test#test1",
         '/error3' => "teSt#test1",
         '/action' => "test#test_action",
@@ -73,6 +73,14 @@ Router::setRule(
         '/helper4' => "test#test_helper_snake",
         '/helper5' => "test#test_helper_camel",
         '/helper6' => "test#test_helper_notfound_method",
-        '/attr' => "test#test_attribute_value"
+        '/attr' => "test#test_attribute_value",
+        '/json' => "test#test_json",
+        '/jsonp' => "test#test_jsonp",
+        '/validate1' => "test_validate#validate1",
+        '/get_validate1' => "test_validate#get_param_validate1",
+        '/validate_handling' => "test_validate_error_handling#validate1",
+        '/validate_handling2' => "test_validate_error_handling2#validate1",
+        '/basic_auth' => "test_basic_auth#execute",
+        '/basic_auth2' => "test_basic_auth#execute2"
     )
 );

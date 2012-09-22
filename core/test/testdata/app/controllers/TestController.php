@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 class TestController extends CoreController {
     public function test1() {
         echo "test1";
@@ -122,5 +123,13 @@ class TestController extends CoreController {
         $this->render("test_attr", array(
             "value" => "attr"
         ));
+    }
+    
+    public function testJson() {
+        $this->render_json(array("name" => "kyouko"));
+    }
+    
+    public function testJsonp() {
+        $this->render_jsonp(array("name" => "yui"), "yuruyuri");
     }
 }

@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * 天気取得クラス
  * @author Ryuichi TANAKA.

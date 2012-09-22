@@ -1,26 +1,32 @@
 <?php
+namespace WebStream;
 /**
  * Applicationクラス
  * @author Ryuichi Tanaka
  * @since 2011/08/19
  */
 class Application {
+    /** アプリケーションファイルディレクトリ名 */
     private $app_dir = "app";
     /** ルーティング解決後のパラメータ */
     private $route;
+    /** バリデーション解決後のパラメータ */
+    private $validate;
     
     /**
      * アプリケーション共通で使用するクラスを初期化する
      */
     public function __construct() {
         /** streamのバージョン定義 */
-        define('STREAM_VERSION', '0.1.10');
+        define('STREAM_VERSION', '0.3.4');
     }
     
     /**
      * 内部で使用する定数を定義
      */
     private function init() {
+        /** クラスパス */
+        define('STREAM_CLASSPATH', '\\WebStream\\');
         /** プロジェクトディレクトリの絶対パスを定義 */
         define('STREAM_ROOT', Utility::getRoot());
         /** アプリケーションディレクトリ */
@@ -74,8 +80,13 @@ class Application {
             Logger::error($e->getMessage() . ": " . STREAM_ROUTING_PATH);
             $this->error(404);
         }
+        // バリデーションエラーの場合は422
+        catch (ValidatorException $e) {
+            Logger::error($e->getMessage(), $e->getTraceAsString());
+            $this->error(422);
+        }
         // それ以外のエラーは500
-        catch (Exception $e) {
+        catch (\Exception $e) {
             Logger::error($e->getMessage(), $e->getTraceAsString());
             $this->error(500);
         }
@@ -88,22 +99,23 @@ class Application {
         // Controllerクラスをインポート
         import(STREAM_APP_DIR . "/controllers/AppController");
         import(STREAM_APP_DIR . "/controllers/" . $this->controller());
-        
         // Controllerクラスを起動
-        $class = new ReflectionClass($this->controller());
+        $class = new \ReflectionClass(STREAM_CLASSPATH . $this->controller());
         $instance = $class->newInstance();
         // initialize
         $initialize = $class->getMethod("initialize");
         $initialize->invoke($instance);
         // before_filter
-        $before_filter = $class->getMethod("before");
-        $before_filter->invoke($instance);
+        $this->before($class, $instance);
+        // basic auth
+        $this->basicAuth($class, $instance);
+        // validate
+        $this->validate($class, $instance);
         // action
         $action = $class->getMethod($this->action());
         $action->invoke($instance, safetyIn($this->params()));
         // after_filter
-        $after_filter = $class->getMethod("after");
-        $after_filter->invoke($instance);
+        $this->after($class, $instance);
     }
     
     /**
@@ -123,10 +135,9 @@ class Application {
         $controller = null;
         if ($this->route->controller() !== null) {
             // _[a-z]を[A-Z]に置換する
-            $controller = preg_replace_callback('/_(?=[a-z])(.+?)/', create_function(
-                '$matches',
-                'return ucfirst($matches[1]);'
-            ), $this->route->controller());
+            $controller = preg_replace_callback('/_(?=[a-z])(.+?)/', function($matches) {
+                return ucfirst($matches[1]);
+            }, $this->route->controller());
             $controller = ucfirst($controller) . "Controller";
         }
         return $controller;
@@ -140,12 +151,120 @@ class Application {
         $action = null;
         if ($this->route->action() !== null) {
             // _[a-z]を[A-Z]に置換する
-            $action = preg_replace_callback('/_(?=[a-z])(.+?)/', create_function(
-                '$matches',
-                'return ucfirst($matches[1]);'
-            ), $this->route->action());
+            $action = preg_replace_callback('/_(?=[a-z])(.+?)/', function($matches) {
+                return ucfirst($matches[1]);
+            }, $this->route->action());
         }
         return $action;
+    }
+    
+    /**
+     * Before Filterを実行する
+     * @param Object リフレクションクラスオブジェクト
+     * @param Object リフレクションクラスインスタンスオブジェクト
+     */
+    private function before($class, $instance) {
+        $this->filter($class, $instance, "Before");
+    }
+    
+    /**
+     * After Filterを実行する
+     * @param Object リフレクションクラスオブジェクト
+     * @param Object リフレクションクラスインスタンスオブジェクト
+     */
+    private function after($class, $instance) {
+        $this->filter($class, $instance, "After");
+    }
+    
+    /**
+     * Filter処理を実行する
+     * @param Object リフレクションクラスオブジェクト
+     * @param Object リフレクションクラスインスタンスオブジェクト
+     * @param String Filter名
+     */
+    private function filter($class, $instance, $filterName) {
+        $annotation = new Annotation(STREAM_CLASSPATH . $this->controller());
+        $methodAnnotations = $annotation->methods("@Filter");
+        foreach ($methodAnnotations as $methodAnnotation) {
+            // @Filter($filterName)を抽出
+            // 複数のメソッドに対してアノテーションを定義可能とする
+            if ($methodAnnotation->value === $filterName) {
+                if ($class->hasMethod($methodAnnotation->methodName)) {
+                    $hasHandlingMethod = true;
+                    $method = $class->getMethod($methodAnnotation->methodName);
+                    $method->invoke($instance);
+                }
+            }
+        }
+    }
+    
+    /**
+     * 基本認証を実行する
+     * @param Object リフレクションクラスオブジェクト
+     * @param Object リフレクションクラスインスタンスオブジェクト
+     */
+    private function basicAuth($class, $instance) {
+        $annotation = new Annotation(STREAM_CLASSPATH . $this->controller());
+        $methodAnnotations = $annotation->methods("@BasicAuth");
+        foreach ($methodAnnotations as $methodAnnotation) {
+            if ($methodAnnotation->methodName === $this->action()) {
+                $config = Utility::parseConfig($methodAnnotation->value);
+                if ($config === null) {
+                    $errorMsg = "Properties file specified by @BasicAuth annotation is not found: $methodAnnotation->value";
+                    throw new ResourceNotFoundException($errorMsg);
+                }
+                $request = new Request();
+                if ($request->authUser() !==  $config["userid"] ||
+                    $request->authPassword() !== $config["password"]) {
+                    $controller = new CoreController();
+                    $controller->move(401);
+                }
+            }
+        }
+    }
+    
+    /**
+     * バリデーションを実行する
+     * @param Object リフレクションクラスオブジェクト
+     * @param Object リフレクションクラスインスタンスオブジェクト
+     */
+    private function validate($class, $instance) {
+        $validator = new Validator();
+        // GET, POSTパラメータ両方を検査する
+        $request = new Request();
+        $ca = $this->route->controller() . "#" . $this->route->action();
+        try {
+            $validator->validateParameter($ca, $request->getGET(), "get");
+            $validator->validateParameter($ca, $request->getPOST(), "post");
+        }
+        catch (ValidatorException $e) {
+            // Controllerクラスでバリデーションエラーを補足するメソッドが
+            // オーバーライドされていれば例外は出さずにそのメソッドへエラー内容を移譲する
+            // オーバーライドされていなければ例外を出す
+            $hasHandlingMethod = false;
+            // アノテーションを利用してAOPを実行
+            $annotation = new Annotation(STREAM_CLASSPATH . $this->controller());
+            $methodAnnotations = $annotation->methods("@Error");
+            foreach ($methodAnnotations as $methodAnnotation) {
+                // @Error("Validate")のみ抽出
+                // 複数のメソッドに対してアノテーションを定義可能とする
+                if ($methodAnnotation->value === "Validate") {
+                    if ($class->hasMethod($methodAnnotation->methodName)) {
+                        $hasHandlingMethod = true;
+                        $method = $class->getMethod($methodAnnotation->methodName);
+                        $method->invoke($instance, array(
+                            "class" => $this->controller(),
+                            "method" => $this->action(),
+                            "error" => $validator->getError()
+                        ));
+                    }
+                }
+            }
+            // バリデーションエラーハンドリングメソッドがない場合、例外を出力
+            if (!$hasHandlingMethod) {
+                throw $e;
+            }
+        }
     }
     
     /**
@@ -156,6 +275,10 @@ class Application {
         return $this->route->params();
     }
     
+    /**
+     * 静的ファイルを返却する
+     * @return Hash パラメータ
+     */
     private function staticFile() {
         return $this->route->staticFile();
     }

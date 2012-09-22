@@ -1,5 +1,5 @@
 <?php
-
+namespace WebStream;
 class DebugModel extends CoreModel {
     
     

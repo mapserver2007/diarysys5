@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * 管理コントローラ
  * @author Ryuichi TANAKA.

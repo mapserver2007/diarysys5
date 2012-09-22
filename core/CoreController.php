@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * CoreControllerクラス
  * @author Ryuichi TANAKA.
@@ -21,7 +22,7 @@ class CoreController {
         $this->page_name = $this->page();
         $this->view = new CoreView($this->page_name);
     }
-    
+
     /**
      * Controllerで使用する処理の初期化
      */
@@ -58,20 +59,20 @@ class CoreController {
         $model_class = $this->page_name . "Model";
         // Serviceクラスが存在する場合、Serviceクラスをロード
         if (import(STREAM_APP_DIR . "/services/" . $service_class)) {
-            $class = new ReflectionClass($service_class);
+            $class = new \ReflectionClass(STREAM_CLASSPATH . $service_class);
             $service_ins = $class->newInstance();
             $this->{$this->page_name} = $service_ins;
         }
         // Serviceクラスが存在しない場合、Modelクラスをロードする
         else if (import(STREAM_APP_DIR . "/models/" . $model_class)) {
-            $class = new ReflectionClass($model_class);
+            $class = new \ReflectionClass(STREAM_CLASSPATH . $model_class);
             $model_ins = $class->newInstance();
             $this->{$this->page_name} = $model_ins;
         }
         // ServiceもModel存在しない場合
         else {
-            $this->{$this->page_name} = 
-                new ServiceModelClassNotFoundException("${service_class} and ${model_class} is not defined.");
+            $errorMsg = "${service_class} and ${model_class} is not defined.";
+            $this->{$this->page_name} = new ServiceModelClassNotFoundException($errorMsg);
         }
     }
     
@@ -97,11 +98,20 @@ class CoreController {
      * テンプレートファイルでJSONを描画する
      * @param Hash 埋め込みパラメータ
      */
-    final protected function render_json($params, $callback = null) {
-        $this->view->json($params, $callback);
+    final protected function render_json($params) {
+        $this->view->json($params);
+    }
+
+    /**
+     * テンプレートファイルでJSONPを描画する
+     * @param Hash 埋め込みパラメータ
+     * @param String コールバック関数
+     */
+    final protected function render_jsonp($params, $callback) {
+        $this->view->jsonp($params, $callback);
     }
     
-        /**
+    /**
      * テンプレートファイルでXMLを描画する
      * @param String テンプレートファイル名
      * @param Hash 埋め込みパラメータ
@@ -174,6 +184,11 @@ class CoreController {
             header("HTTP/1.1 400 Bad Request");
             $this->render_error("400 Bad Request");
             break;
+        case 401:
+            header("WWW-Authenticate: Basic realm='Private page'");
+            header("HTTP/1.1 401 Unauthorized");
+            $this->render_error("401 Unauthorized");
+            break;
         case 403:
             header("HTTP/1.1 403 Forbidden");
             $this->render_error("403 Forbidden");
@@ -182,14 +197,16 @@ class CoreController {
             header("HTTP/1.1 404 Not Found");
             $this->render_error("404 Not Found");
             break;
+        case 422:
+            header("HTTP/1.1 422 Unprocessable Entity");
+            $this->render_error("422 Unprocessable Entity");
+            break;
         case 500:
             header("HTTP/1.1 500 Internal Server Error");
             $this->render_error("500 Internal Server Error");
             break;
         default:
-            $msg = "Unknown status code: " . $status_code;
-            Logger::fatal($msg);
-            throw new Exception($msg);
+            throw new ConnectionException("Unknown status code: " . $status_code);
         }
         Logger::info("HTTP access occured: status code ${status_code}");
         exit;
@@ -201,19 +218,11 @@ class CoreController {
      */
     final private function page() {
         $page_name = null;
-        if (preg_match('/(.*)Controller$/', get_class($this), $matches)) {
+        $class_path = explode('\\', get_class($this));
+        $class_name = end($class_path);
+        if (preg_match('/(.*)Controller$/', $class_name, $matches)) {
             $page_name = $matches[1];
         }
         return $page_name;
     }
-    
-    /**
-     * before filterの空実装
-     */
-    public function before() {}
-    
-    /**
-     * after filterの空実装
-     */
-    public function after() {}
 }

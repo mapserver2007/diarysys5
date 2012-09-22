@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * フィードコントローラ
  * @author Ryuichi TANAKA.

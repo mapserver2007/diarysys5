@@ -7,7 +7,7 @@
         <script type="text/javascript" src="/diarysys5/js/lib/mix.modules.js"></script>
         <script type="text/javascript" src="/diarysys5/js/diarysys.modules.js"></script>
         <script type="text/javascript" src="/diarysys5/js/diarysys.js"></script>
-        <title><?php echo safetyOut($title); ?></title>
+        <title><?php echo \WebStream\safetyOut($title); ?></title>
     </head>
     <body>
         <?php $this->render($template, $content); ?>

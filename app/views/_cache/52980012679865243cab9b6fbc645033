@@ -15,7 +15,7 @@
         <script type="text/javascript" src="/diarysys5/js/lib/jquery.fancybox-1.3.4.pack.js"></script>
         <script type="text/javascript" src="/diarysys5/js/diarysys.modules.js"></script>
         <script type="text/javascript" src="/diarysys5/js/diarysys.js"></script>
-        <title><?php echo safetyOut($title); ?></title>
+        <title><?php echo \WebStream\safetyOut($title); ?></title>
     </head>
     <body>
         <div id="main_container">
@@ -26,10 +26,10 @@
                         <div class="entry_subinfo">
                             <span class="tag" id="tag_preview">(タグ未設定)</span>
                             <span class="weather">
-                                <img src="<?php echo safetyOut($weather); ?>" alt="今日の天気" />
+                                <img src="<?php echo \WebStream\safetyOut($weather); ?>" alt="今日の天気" />
                             </span>
                             <span class="date">
-                                <?php echo safetyOut($date); ?>
+                                <?php echo \WebStream\safetyOut($date); ?>
                             </span>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * 認証クラス
  * <pre>

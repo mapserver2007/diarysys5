@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * Amazonライブラリ
  * [pear install Services_Amazon-0.9.0]

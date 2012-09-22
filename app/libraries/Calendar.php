@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * Calendarライブラリ
  * @author Ryuichi TANAKA.

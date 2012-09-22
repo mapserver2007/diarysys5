@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * エントリサービス
  * @author Ryuichi TANAKA.
@@ -156,7 +157,10 @@ class EntryService extends CoreService {
                 $entry_num = $this->Entry->entryNumByDay($day);
             }
         }
-        $paginate = new Paginate($current_page, $entry_num);
+        $paginate = new Paginate($current_page,
+                                 $entry_num,
+                                 $this->getPageNum(),
+                                 $this->getPageBlock());
         return $paginate->html();
     }
     

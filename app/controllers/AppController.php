@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * 共通コントローラ
  * @author Ryuichi TANAKA.
@@ -16,7 +17,8 @@ class AppController extends CoreController {
     protected $isMobile = false;
     
     /**
-     * before filter
+     * @Inject
+     * @Filter("Before")
      */
     public function before() {
         define('PROJECT_ROOT', STREAM_ROOT);

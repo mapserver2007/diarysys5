@@ -1,4 +1,5 @@
 <?php
+namespace WebStream;
 /**
  * DB接続クラス
  * @author Ryuichi TANAKA.
@@ -30,7 +31,7 @@ class DatabaseCore {
         try {
             // MySQL
             if ($dbms === self::MYSQL) {
-                $manager = new PDO(
+                $manager = new \PDO(
                     "mysql:host=" . $options["host"] . "; dbname=" . $options["dbname"],
                     $options["user"],
                     $options["password"]
@@ -42,9 +43,9 @@ class DatabaseCore {
                 $manager = new PDO("sqlite:" . Utility::getRoot() . "/db/" . $options["dbfile"]);
             }
         }
-        catch(PDOException $e) {
+        catch(\PDOException $e) {
             Logger::error($e->getMessage(), $e->getTraceAsString());
-            throw $e;
+            throw new DatabaseException($e->getMessage());
         }
         return $manager;
     }
@@ -58,6 +59,8 @@ class DatabaseCore {
 class Database extends DatabaseCore {
     /** DBマネージャ */
     private static $dbaccessor = null;
+    /** DBコネクション */
+    private $connect;
     /** 設定ファイルパス */
     private static $config_path = "config/database.ini";
     /** SQL */
@@ -74,23 +77,43 @@ class Database extends DatabaseCore {
         
     /**
      * メンバ変数を初期化
+     * @param String DB名
      */
-    private function init() {
+    private function init($dbname = null) {
         $this->sql  = null;
         $this->bind = null;
         $this->stmt = null;
+        $this->connect($dbname);
     }
     
     /**
      * DBマネージャを返却する
+     * @param String DB名
      * @return Object DBマネージャ
      */
-    public static function manager() {
+    public static function manager($dbname = null) {
         if (!is_object(self::$dbaccessor)) {
             self::$dbaccessor = new Database();
         }
-        self::$dbaccessor->init();
+        self::$dbaccessor->init($dbname);
         return self::$dbaccessor;
+    }
+    
+    /**
+     * DBに接続する
+     * @param String DB名
+     */
+    private function connect($dbname = null) {
+        // DBへの接続は設定ファイルまたは@Databaseアノテーションで行う
+        // 両方設定されていた場合は@Databaseアノテーションを優先する
+        $config = Utility::parseConfig(self::$config_path);
+        if ($dbname !== null) {
+            $config["dbname"] = $dbname;
+            $this->connect = parent::getManager($config);
+        }
+        if ($this->connect === null) {
+            $this->connect = parent::getManager($config);
+        }
     }
     
     /**
@@ -102,19 +125,18 @@ class Database extends DatabaseCore {
     private function execSQL($sql, $bind = array()) {
         $result = false;
         try {
-            $config = Utility::parseConfig(self::$config_path);
-            $stmt = parent::getManager($config)->prepare($sql);
+            $stmt = $this->connect->prepare($sql);
             Logger::info("Executed SQL: " . $sql);
             Logger::info("Bind statement: " . implode(",", $bind));
             if ($stmt === false) {
-                throw new Exception("Can't create statement. - ". $sql);
+                throw new DatabaseException("Can't create statement. - ". $sql);
             }
             foreach ($bind as $key => $value) {
                 if (preg_match("/^[0-9]+$/", $value) && is_int($value)) {
-                    $stmt->bindValue($key, $value, PDO::PARAM_INT);
+                    $stmt->bindValue($key, $value, \PDO::PARAM_INT);
                 }
                 else {
-                    $stmt->bindValue($key, $value, PDO::PARAM_STR);
+                    $stmt->bindValue($key, $value, \PDO::PARAM_STR);
                 }
             }
             $exec = $stmt->execute();
@@ -127,12 +149,12 @@ class Database extends DatabaseCore {
                 $message = $messages[2];
                 $sqlState = "(SQL STATE: ${messages[0]})";
                 $errorCode = "(ERROR CODE: ${messages[1]})";
-                throw new Exception("${message} ${sqlState} ${errorCode}");
+                throw new DatabaseException("${message} ${sqlState} ${errorCode}");
             }
         }
-        catch (Exception $e) {
+        catch (\Exception $e) {
             Logger::error($e->getMessage(), $e->getTraceAsString());
-            throw $e;
+            throw new DatabaseException($e->getMessage());
         }
         return $result;
     }
@@ -147,6 +169,32 @@ class Database extends DatabaseCore {
         $result = $this->execSQL($sql, $bind);
         $this->init();
         return $result;
+    }
+    
+    /**
+     * テーブルのフィールド情報を返却する
+     * @param Array テーブルリスト
+     * @return Array フィールド情報
+     */
+    public function columnInfo($tables) {
+        $columns = array();
+        foreach ($tables as $table) {
+            $sql = "SELECT * FROM ${table}";
+            $i = 0;
+            $columns[$table] = array();
+            try {
+                $this->execSQL($sql);
+                while ($column = $this->stmt->getColumnMeta($i++)) {
+                   $columns[$table][] = $column;
+                }
+                $this->init();
+            }
+            catch (\Exception $e) {
+                Logger::error($e->getMessage(), $e->getTraceAsString());
+                throw new DatabaseException($e->getMessage());
+            }
+        }
+        return $columns;
     }
     
     /**
@@ -167,7 +215,7 @@ class Database extends DatabaseCore {
             
         // 取得結果を連想配列に入れる
         $result = array();
-        while ($row = $this->stmt->fetch(PDO::FETCH_ASSOC)) {
+        while ($row = $this->stmt->fetch(\PDO::FETCH_ASSOC)) {
             $result[] = $row;
         }
         
