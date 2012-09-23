@@ -7,11 +7,11 @@ namespace WebStream;
  */
 class LoginController extends AppController {
     /**
-     * before filter
+     * @Inject
+     * @Filter("Before")
      */
     public function before() {
         $this->isReferer();
-        parent::before();
     }
     
     /**

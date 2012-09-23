@@ -11,6 +11,7 @@ class EntryService extends CoreService {
      * @param String 処理メソッド名
      * @param Integer ページ番号
      * @param Array 処理メソッドに渡す引数
+     * @return Array エントリデータ
      */    
     private function getEntry($callback, $page, $arguments = array()) {
         $paginate = Utility::parseConfig("config/paginate.ini");
@@ -28,7 +29,7 @@ class EntryService extends CoreService {
         foreach ($entries as &$entry) {
             $entry["TAG"] = $tags[$entry["ID"]];
             $entry["WEATHER"] = "http://image.weather.livedoor.com/img/icon/{$entry['WEATHER']}.gif";
-            $entry["DESCRIPTION"] = BBCode::convHTML($entry["DESCRIPTION"]);
+            $entry["DESCRIPTION"] = preg_replace('/\n/', '<br/>', BBCode::convHTML($entry["DESCRIPTION"]));
         }
         
         return $entries;
@@ -166,7 +167,7 @@ class EntryService extends CoreService {
     
     /**
      * カレンダー(アーカイブデータ)を返却する
-     * 
+     * @return String カレンダーHTML
      */
     public function calendar() {
         return Calendar::convHTML($this->Entry->calendar());

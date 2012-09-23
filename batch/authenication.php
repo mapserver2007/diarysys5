@@ -11,7 +11,10 @@
  * @author Ryuichi TANAKA.
  * @since 2012/03/12
  */
+namespace WebStream;
+ 
 require_once '../core/AutoImport.php';
+require_once '../core/Functions.php';
 importAll("core");
 
 // ログ出力ディレクトリ、ログレベルをテスト用に変更

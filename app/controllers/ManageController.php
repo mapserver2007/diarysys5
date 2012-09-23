@@ -112,8 +112,10 @@ class ManageController extends AppController {
         // エントリ登録に必要なデータをチェック
         $this->Manage->checkEntryData($entry);
         // 本文をHTMLに変換する
-        $entry["description_html"] = $this->Manage->bb2html($entry["description"]);
-                
+        // 改行コードを<br/>タグに置換
+        $entry["description_html"] = 
+            preg_replace('/\n/', '<br/>', $this->Manage->bb2html($entry["description"]));
+
         $this->layout("base", $this->getContent(array(
             "template" => "entry_register_confirm",
             "header_template" => "header.manage",

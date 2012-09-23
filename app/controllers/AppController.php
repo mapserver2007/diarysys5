@@ -41,7 +41,7 @@ class AppController extends CoreController {
      */
     protected function isReferer() {
         if (!$this->request->referer()) {
-            $this->forbidden();
+            //$this->forbidden();
         }
     }
     
